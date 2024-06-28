@@ -1,11 +1,10 @@
 name: Publish Image
 on:
-  workflow_dispatch: # Only manual trigger and only for the main branch
+  workflow_dispatch:
     branches:
       - main
 env:
   IMAGE_NAME: unity-catalog
-  VERSION: 0.1.0
 
 jobs:
   publish:
@@ -38,7 +37,7 @@ jobs:
           push: true
           provenance: false
           sbom: false
-          tags: godatadriven/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          tags: godatadriven/${{ env.IMAGE_NAME }}:latest
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
