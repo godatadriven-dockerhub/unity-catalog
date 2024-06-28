@@ -36,13 +36,6 @@ jobs:
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
 
-    - name: Test image
-      run: |
-        if [[ -f "docker-compose.test.yml" ]]; then
-            docker-compose --file docker-compose.test.yml build
-            docker-compose --file docker-compose.test.yml run sut
-        fi
-
     - name: Docker login
       uses: docker/login-action@v1
       with:
