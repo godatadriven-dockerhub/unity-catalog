@@ -30,7 +30,7 @@ jobs:
           file: ./Dockerfile
           push: false
           load: true
-          tags: ${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          tags: godatadriven.${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
@@ -51,9 +51,7 @@ jobs:
           push: true
           provenance: false
           sbom: false
-          tags: |
-            godatadriven/${{ env.IMAGE_NAME }}:${env.VERSION}
-            godatadriven/${{ env.IMAGE_NAME }}:latest
+          tags: godatadriven/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
