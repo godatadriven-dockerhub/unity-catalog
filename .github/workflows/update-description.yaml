@@ -1,4 +1,4 @@
-name: Publish Image
+name: Update Docker Hub Description
 on:
   workflow_dispatch:
     branches:
