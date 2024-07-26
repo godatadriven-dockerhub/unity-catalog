@@ -1,5 +1,5 @@
 # Use Amazon Corretto 11 as the base image.
-FROM amazoncorretto:11
+FROM amazoncorretto:17-alpine-jdk
 # Set the working directory
 WORKDIR /app
 
@@ -9,13 +9,19 @@ ENV UC_VERSION=v0.1.0
 # Limit the memory usage of the sbt process to 2GB
 ENV SBT_OPTS="-Xmx2G"
 
-# Fetch unity catalog and install sbt
-RUN yum install -y git && \
+# Install git, fetch unity catalog, and remove git
+RUN apk add --no-cache git curl bash && \
     git clone --depth 1 --branch ${UC_VERSION} https://github.com/unitycatalog/unitycatalog.git && \
-    yum remove -y git && \
-    curl -L -o sbt-1.9.8.rpm https://repo.scala-sbt.org/scalasbt/rpm/sbt-1.9.8.rpm && \
-    rpm -ivh sbt-1.9.8.rpm && \
-    rm sbt-1.9.8.rpm
+    apk del git
+
+# Download and install sbt
+RUN curl -L -o sbt-1.9.8.tgz https://github.com/sbt/sbt/releases/download/v1.9.8/sbt-1.9.8.tgz && \
+    tar -xvzf sbt-1.9.8.tgz && \
+    mv sbt /usr/local && \
+    rm sbt-1.9.8.tgz
+
+# Add sbt to PATH
+ENV PATH="/usr/local/sbt/bin:${PATH}"
 
 # Navigate to the project directory
 WORKDIR /app/unitycatalog
