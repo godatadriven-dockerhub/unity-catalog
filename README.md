@@ -1,6 +1,6 @@
 ## Docker Image for Unity Catalog
 
-This Docker image is used to run the Unity Catalog server locally and is based on Amazon Corretto 11. 
+This Docker image runs the Unity Catalog server
 
 
 ### Running the Docker Image
