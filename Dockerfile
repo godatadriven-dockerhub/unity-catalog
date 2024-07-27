@@ -1,18 +1,27 @@
-# Use Amazon Corretto 11 as the base image.
-FROM amazoncorretto:17-alpine-jdk
+# Use Debian Bullseye Slim as the base image.
+FROM debian:bullseye-slim
+
 # Set the working directory
 WORKDIR /app
 
 # Define UC_VERSION
-ENV UC_VERSION=v0.1.0
+ARG UC_VERSION
 
 # Limit the memory usage of the sbt process to 2GB
 ENV SBT_OPTS="-Xmx2G"
 
-# Install git, fetch unity catalog, and remove git
-RUN apk add --no-cache git curl bash && \
-    git clone --depth 1 --branch ${UC_VERSION} https://github.com/unitycatalog/unitycatalog.git && \
-    apk del git
+RUN apt-get update && apt-get install -y \
+    curl \
+    bash \
+    unzip \
+    wget \
+    openjdk-11-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN wget https://github.com/unitycatalog/unitycatalog/archive/refs/tags/v${UC_VERSION}.zip \
+    && unzip v${UC_VERSION}.zip \
+    && mv unitycatalog-${UC_VERSION} unitycatalog \
+    && rm v${UC_VERSION}.zip
 
 # Download and install sbt
 RUN curl -L -o sbt-1.9.8.tgz https://github.com/sbt/sbt/releases/download/v1.9.8/sbt-1.9.8.tgz && \
@@ -20,14 +29,21 @@ RUN curl -L -o sbt-1.9.8.tgz https://github.com/sbt/sbt/releases/download/v1.9.8
     mv sbt /usr/local && \
     rm sbt-1.9.8.tgz
 
-# Add sbt to PATH
 ENV PATH="/usr/local/sbt/bin:${PATH}"
 
-# Navigate to the project directory
 WORKDIR /app/unitycatalog
 
-# Compile unity catalog
-RUN sbt clean compile package
+# Compile unity catalog and remove useless target directory
+RUN sbt clean compile package && \
+    rm -rf target
+
+# Build the final image with the compiled unity catalog
+FROM openjdk:11-jre-slim-bullseye
+
+COPY --from=0 /app/unitycatalog/ /app/unitycatalog/
+COPY --from=0 /root/.cache/coursier/v1/https/ /root/.cache/coursier/v1/https/
+
+WORKDIR /app/unitycatalog
 
 # Listen to port 8080
 EXPOSE 8080
