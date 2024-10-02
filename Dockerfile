@@ -45,6 +45,8 @@ FROM alpine:${ALPINE_VERSION} AS runtime
 ARG JAVA_HOME="/usr/lib/jvm/default-jvm"
 ARG HOME
 
+RUN apk update && apk add --no-cache bash
+
 # Copy Java from base
 COPY --from=base $JAVA_HOME $JAVA_HOME
 
