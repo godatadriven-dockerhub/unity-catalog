@@ -35,6 +35,8 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
+          build-args: |
+              UC_VERSION=0.1.0
           provenance: false
           sbom: false
           tags: godatadriven/${{ env.IMAGE_NAME }}:latest
