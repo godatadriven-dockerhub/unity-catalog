@@ -55,7 +55,7 @@ ENV HOME=$HOME \
     PATH="${JAVA_HOME}/bin:${PATH}"
 
 COPY --from=base /app/unitycatalog/ /app/unitycatalog/
-COPY --from=base /root/.cache/coursier/v1/https/ /root/.cache/coursier/v1/https/
+COPY --from=base /root/.cache/ /root/.cache/
 
 WORKDIR /app/unitycatalog
 
