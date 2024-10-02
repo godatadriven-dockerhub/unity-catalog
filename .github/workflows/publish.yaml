@@ -39,7 +39,9 @@ jobs:
               UC_VERSION=0.2.0
           provenance: false
           sbom: false
-          tags: godatadriven/${{ env.IMAGE_NAME }}:latest
+          tags: |
+            godatadriven/${{ env.IMAGE_NAME }}:latest
+            godatadriven/${{ env.IMAGE_NAME }}:0.2.0
           labels: |
             org.opencontainers.image.source=${{ github.event.repository.clone_url }}
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
