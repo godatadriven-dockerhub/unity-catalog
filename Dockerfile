@@ -1,7 +1,8 @@
 ARG ALPINE_VERSION="3.20"
 ARG SBT_RESOLVER="https://oss.sonatype.org/content/repositories/releases/"
-ARG sbt_args="-J-Xmx4G -Dsbt.resolver=${SBT_RESOLVER}"
+ARG sbt_args="-J-Xmx4G -Dsbt.resolver=${SBT_RESOLVER} -Djava.net.preferIPv4Stack=true"
 ARG UC_VERSION="0.2.0"
+ARG HOME="/app/unitycatalog"
 
 # Build stage, using Amazon Corretto jdk 17 on alpine with arm64 support
 FROM amazoncorretto:17-alpine${ALPINE_VERSION}-jdk AS base
@@ -34,16 +35,18 @@ ENV PATH="/usr/local/sbt/bin:${PATH}"
 
 WORKDIR /app/unitycatalog
 
-# Compile unity catalog and remove useless target directory
-RUN sbt ${sbt_args} clean compile package && \
-    rm -rf target
+# Compile unity catalog
+RUN sbt ${sbt_args} clean compile package
 
 # Build the final image with the compiled unity catalog
 FROM alpine:${ALPINE_VERSION} AS runtime
 
 
 ARG JAVA_HOME="/usr/lib/jvm/default-jvm"
+ARG USER="unitycatalog"
 ARG HOME
+ENV HOME=$HOME
+
 
 RUN apk update && apk add --no-cache bash
 
@@ -54,10 +57,22 @@ ENV HOME=$HOME \
     JAVA_HOME=$JAVA_HOME \
     PATH="${JAVA_HOME}/bin:${PATH}"
 
-COPY --from=base /app/unitycatalog/ /app/unitycatalog/
+COPY --from=base $HOME $HOME
 COPY --from=base /root/.cache/ /root/.cache/
 
-WORKDIR /app/unitycatalog
+WORKDIR $HOME
+
+
+
+# Create a user and group for the unity catalog
+RUN <<EOF
+addgroup -S $USER
+adduser -S -G $USER $USER
+chmod -R 550 $HOME
+mkdir -p $HOME/etc/
+chmod -R 770 $HOME/etc/
+chown -R $USER:$USER $HOME
+EOF
 
 # Listen to port 8080
 EXPOSE 8080
