@@ -1,6 +1,6 @@
 ## Docker Image for Unity Catalog
 
-This Docker image runs the Unity Catalog server. latest version is 0.2.0.
+This Docker image runs the Unity Catalog server. latest version is 0.2.0. Both ARM64 and AMD64 are supported.
 
 
 ### Running the Docker Image
