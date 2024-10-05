@@ -16,7 +16,7 @@ http://localhost:8080/api/2.1/unity-catalog
 For detailed API documentation, please refer to the [API documentation](https://github.com/unitycatalog/unitycatalog/tree/main/api).
 ).
 
-UC ClI is at directory /app/unitycatalog/bin/uc. Working directory is set to /app/unitycatalog/
+UC CLI is at directory /app/unitycatalog/bin/uc. Working directory is set to /app/unitycatalog/
 
 ### License
 This project is licensed under the Apache License 2.0 - see the [LICENSE](../../projects/unity-catalog/LICENSE) file for details.
