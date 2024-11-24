@@ -60,9 +60,8 @@ ENV HOME=$HOME \
 COPY --from=base $HOME $HOME
 COPY --from=base /root/.cache/ /root/.cache/
 
+
 WORKDIR $HOME
-
-
 
 # Create a user and group for the unity catalog
 RUN <<EOF
@@ -70,7 +69,7 @@ addgroup -S $USER
 adduser -S -G $USER $USER
 chmod -R 550 $HOME
 mkdir -p $HOME/etc/
-chmod -R 770 $HOME/etc/
+chmod -R 775 $HOME/etc/
 chown -R $USER:$USER $HOME
 EOF
 
