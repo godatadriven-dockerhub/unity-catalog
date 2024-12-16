@@ -1,7 +1,7 @@
 ARG ALPINE_VERSION="3.20"
 ARG SBT_RESOLVER="https://oss.sonatype.org/content/repositories/releases/"
 ARG sbt_args="-J-Xmx4G -Dsbt.resolver=${SBT_RESOLVER} -Djava.net.preferIPv4Stack=true"
-ARG UC_VERSION="0.2.0"
+ARG UC_VERSION="0.2.1"
 ARG HOME="/app/unitycatalog"
 
 # Build stage, using Amazon Corretto jdk 17 on alpine with arm64 support
