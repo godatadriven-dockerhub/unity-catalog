@@ -39,7 +39,7 @@ jobs:
               UC_VERSION=0.2.1
           provenance: false
           sbom: false
-          tags:
+          tags: |
             godatadriven/${{ env.IMAGE_NAME }}:latest
             godatadriven/${{ env.IMAGE_NAME }}:0.2.1
           labels: |
